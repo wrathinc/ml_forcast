@@ -17,9 +17,11 @@ df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.
 
 df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
 forecast_col = 'Adj. Close'
-df.fillna(value=-99999, inplace=True)
+#going to remove value=-99999, 
+df.fillna(-99999, inplace=True)
 forecast_out = int(math.ceil(0.01 * len(df)))
-df['label'] = df[forecast_col].shift(-forecast_out)
+#going to remove "-"forcast_out
+df['label'] = df[forecast_col].shift(forecast_out)
 
 X = np.array(df.drop(['label'], 1))
 X = preprocessing.scale(X)
