@@ -8,20 +8,31 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 import datetime
 
+#sets style for graph
 style.use('ggplot')
-
+# df(dataframe) getting data from wiki google for stock info pandas file 
 df = quandl.get("WIKI/GOOGL")
+#sets df var to datafame with target df list names 
 df = df[['Adj. Open',  'Adj. High',  'Adj. Low',  'Adj. Close', 'Adj. Volume']]
+# two equtions for one for high to low and one for precent change 
 df['HL_PCT'] = (df['Adj. High'] - df['Adj. Low']) / df['Adj. Close'] * 100.0
 df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.0
-
+#seting dataframe with the two equation var and adj_c and adj_v 
 df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
+#forcast colum is set to adj close 
 forecast_col = 'Adj. Close'
-#going to remove value=-99999, 
-df.fillna(-99999, inplace=True)
+
+
+#pandas fillNa used to fill NA/NaN with vaules. 
+# DataFrame.fillna(value=None, method=None, axis=None, inplace=False, limit=None, downcast=None, **kwargs)
+
+df.fillna(value=-99999, inplace=True)
+#Seting forecast_out to 35 days 
+print(f"length of dataframe is: {len(df)}")
 forecast_out = int(math.ceil(0.01 * len(df)))
-#going to remove "-"forcast_out
-df['label'] = df[forecast_col].shift(forecast_out)
+print(f"now the amount of days used for prdiction: {forecast_out}")
+#taking the adj close and and the 35 days of the datafarme and shifting them or lagging them.
+df['label'] = df[forecast_col].shift(-forecast_out)
 
 X = np.array(df.drop(['label'], 1))
 X = preprocessing.scale(X)
