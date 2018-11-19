@@ -39,16 +39,22 @@ X = preprocessing.scale(X)
 X_lately = X[-forecast_out:]
 X = X[:-forecast_out]
 
+#drops out NaN and replaces it with a vaule 
 df.dropna(inplace=True)
 
 y = np.array(df['label'])
 
+#this is the start of the ml algorithm we are making some var and geting the vaules from train_test_split.
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# clf is now set to a algorithm LinearRegression(n_jobs-1 is setting max procces aloud)
 clf = LinearRegression(n_jobs=-1)
+#this is were the data gets fitted and trasformed 
 clf.fit(X_train, y_train)
+# this is the accurancy of the test data 
 confidence = clf.score(X_test, y_test)
 
 forecast_set = clf.predict(X_lately)
+#sets nan to a vaule in forecast 
 df['Forecast'] = np.nan
 
 last_date = df.iloc[-1].name
