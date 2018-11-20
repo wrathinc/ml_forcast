@@ -1,3 +1,5 @@
+'''python
+
 import pandas as pd 
 import quandl, math, datetime, time
 import numpy as np 
@@ -73,4 +75,4 @@ plt.legend(loc=4)
 plt.xlabel('Date')
 plt.ylabel('Price')
 plt.show()
-
+'''
