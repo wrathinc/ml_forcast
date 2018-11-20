@@ -37,11 +37,13 @@ df.dropna(inplace=True)
 y = np.array(df)
 
 
-x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2
+x_train, x_test, y_train, y_test = train_test_split(
+    x,y,test_size=0.2
 )
 
 clf = LinearRegression( n_jobs=-1)
 clf.fit(x_train,y_train)
+
 with open('linearrgression.pickle', 'wb') as f:
     pickle.dump(clf,f)
 
