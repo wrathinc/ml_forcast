@@ -17,7 +17,6 @@ class TestStringMethods(unittest.TestCase):
             s.split(2)
 
 
-    def test
 
 if __name__ == '__main__':
     unittest.main()

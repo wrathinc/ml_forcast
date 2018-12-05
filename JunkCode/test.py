@@ -32,7 +32,7 @@ nestlist = [7,8,9,10,11,12]
 
 testf = [''.join(map(str, i)) for i in zip(lists, nestlist)]
 
-print(testf)
+print(testf,"testf")
 
 
 def num_to_dashes(num):
@@ -43,4 +43,3 @@ def num_to_dashes(num):
 
 
 
-print(num_to_dashes(lists[3]))
