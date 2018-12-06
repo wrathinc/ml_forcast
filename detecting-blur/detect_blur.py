@@ -59,8 +59,6 @@ for imagePath in paths.list_images(args["images"]):
         for image in tqdm(range(1)):
             print("The Sorting hat says!!!! blurry")
 
-    # for i in tqdm(range(len(imagePath))):
-    #     time.sleep(.1)
 print("""\n
                __  _                          
               / /_(_)___  _______  __         
