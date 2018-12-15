@@ -1,82 +1,68 @@
 # USAGE
-# python detect_blur.py --images images
-
-# import the necessary packages
+# python detect_blur.py 
 from imutils import paths
-import argparse
+import numpy as np 
+import argparse  as give_argument
 import cv2
 import os, time 
-import threading
+from folders import __folder__
+from blur_filter import blur_laplacian
 
 start = time.time()
 
-def create_folders():
-    blurry_pics = "blury_photo"
-    not_blurry_photo = "not_blurry"
-    image_folder = "images"
+__folder__.create_folders(self=__file__)
 
-    if not os.path.exists(blurry_pics):
-        os.mkdir(blurry_pics)
-
-    if not os.path.exists(not_blurry_photo):
-        os.mkdir(not_blurry_photo)
-
-    if not os.path.exists(image_folder):
-        os.mkdir(image_folder)
-
-create_folders()
-
-def variance_of_laplacian(image):
-    # compute the Laplacian of the image and then return the focus
-    # measure, which is simply the variance of the Laplacian
-    print(time.time()-start)
-    return cv2.Laplacian(image, cv2.CV_64F).var()
-
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--images", required=True,
-    help="path to input directory of images")
-ap.add_argument("-t", "--threshold", type=float, default=10.0,
-    help="focus measures that fall below this value will be considered 'blurry'")
-args = vars(ap.parse_args())
-print("The Sorting hat of blurry images!")
-
-print("""
-               __  _                          
-              / /_(_)___  _______  __         
-             / __/ / __ \/ ___/ / / /         
-            / /_/ / /_/ (__  ) /_/ /          
- ___________\__/_/ .___/____/\__, /___________
-/_____/_____/   /_/         /____/_____/_____/
-""")
+def image_process(image):
+	''' image_process 
+		args	    :   images
+		function    :   cv2.cvtColor(image, cv2.COLOR_BGR2GRAY),
+						blur_laplacian.laplacian(src_gray)
+		usage 		: 
+						coverts the image into gray
+						returns vaule for function bulr_laplacian
+	'''
+	src_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)	
+	frequency_varince = blur_laplacian.laplacian(src_gray)
+	imageSort(frequency_varince,image)
 
 
-# loop over the input images
-def imageloop():
-    for imagePath in paths.list_images(args["images"]):
-        start = time.time()
-        # load the image, convert it to grayscale, and compute the
-        # focus measure of the image using the Variance of Laplacian
-        # method
-        image = cv2.imread(imagePath)
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        fm = variance_of_laplacian(gray)
-        dirpath = os.getcwd()
+def imageSort(frequency_varince,image):
+	""" have a dict for now that sets a threshold vaule for how
+		sort the image. Then we use cv2.imwrite to save the image in a folder.
 
-        if fm > args["threshold"]:
-            cv2.imwrite(dirpath+"/not_blurry/test{}.jpg".format(fm),image)
-            print(time.time()-start)
-        # if the focus measure is less than the supplied threshold,
-        # then the image should be considered "blurry"
-        if fm < args["threshold"]:
-        #print("The Sorting hat says!!!! blurry")
-            cv2.imwrite(dirpath+"/blury_photo/test{}.jpg".format(fm),image)
-            print(time.time()-start)
+		args	: freqency_varince, image
+		usage : sort images into folders 
+
+	 """
+	args = {"threshold":25}
+
+	try:
+		if frequency_varince < args["threshold"]:
+			cv2.imwrite(os.getcwd()+"/not_blurry/image{}.jpg".format(frequency_varince),image) #--> sorts image into folders based on the vaule of lapcian
+		
+	except(RuntimeError, TypeError, NameError) as e:
+		print(e)
+
+	else:
+		if frequency_varince > args["threshold"]:
+			cv2.imwrite(os.getcwd()+"/blury_photo/image{}.jpg".format(frequency_varince),image)#--> sorts image into folders based on the vaule of lapcian
+	
 
 
-imageloop()
+def main():
+	'''main function runs a forloop though our folder of images'''
+
+	for file in paths.list_images("images"):
+		image = cv2.imread(file)
+		print(type(file))
+		print(type(image))
+		
+		image_process(image)
+		
+		
+
+
+if __name__ == "__main__":
+	main()
 
 print(time.time()-start)
-
-
-
